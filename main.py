@@ -31,7 +31,7 @@ def models():
 def model_predict(img_path, model):
     # Preprocessing the image
     image = Image.open(img_path).convert('RGB')
-    size = (229,229)
+    size = (224,224)
     image = ImageOps.fit(image, size)
     image = img_to_array(image)
     image= np.expand_dims(image, axis = 0)
