@@ -9,10 +9,9 @@ import numpy as np
 import streamlit as st
 
 # Keras
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
-from tensorflow.keras.applications.mobilenet_v2 import decode_predictions
+from tensorflow.keras.applications.xception import preprocess_input
+from tensorflow.keras.applications.xception import decode_predictions
 from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing import image
 from tensorflow.keras.preprocessing.image import img_to_array
 import tensorflow.keras.backend as K
 from werkzeug.utils import secure_filename
@@ -31,11 +30,10 @@ def models():
 def model_predict(img_path, model):
     # Preprocessing the image
     image = Image.open(img_path).convert('RGB')
-    size = (224,224)
+    size = (229,229)
     image = ImageOps.fit(image, size)
     image = img_to_array(image)
-    image= np.expand_dims(image, axis = 0)
-    image = np.array(image) / 255.0
+    image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
     image = preprocess_input(image)
     preds=model.predict(image)
     label = decode_predictions(preds)
