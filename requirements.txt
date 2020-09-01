@@ -1,4 +1,4 @@
-tensorflow==1.15.2
+tensorflow-cpu==2.3.0
 numpy==1.18.5
 pillow==7.1.0
 h5py==2.10.0
