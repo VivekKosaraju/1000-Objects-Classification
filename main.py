@@ -35,13 +35,12 @@ def model_predict(img_path, model):
     image = img_to_array(image)
     image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
     image = preprocess_input(image)
-    global graph
-    with graph.as_default():
-        preds=model.predict(image)
-        label = decode_predictions(preds)
-        # retrieve the most likely result, e.g. highest probability
-        label = label[0][0]
-        return label
+    graph = tf.get_default_graph()
+    preds=model.predict(image)
+    label = decode_predictions(preds)
+    # retrieve the most likely result, e.g. highest probability
+    label = label[0][0]
+    return label
 
 
 
@@ -68,7 +67,6 @@ def main():
         with st.spinner("Predicting......"):
             model = models()
             graph = tf.get_default_graph()
-            model = models()
             label=model_predict(image_file,model)
             st.write('%s (%.2f%%)' % (label[1], label[2]*100))
          
