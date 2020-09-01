@@ -14,14 +14,20 @@ from tensorflow.keras.applications.xception import decode_predictions
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 import tensorflow.keras.backend as K
+from tensorflow.python.keras.backend import set_session
 from werkzeug.utils import secure_filename
 import h5py
 import os
 import io
 from PIL import Image, ImageOps
 
+session = tf.Session()
+graph = tf.get_default_graph()
+
 @st.cache(suppress_st_warning=True,allow_output_mutation=True)
 def models():
+    graph = tf.get_default_graph()
+    set_session(session)
     model=load_model('model')
     model.summary()
     model._make_predict_function()
@@ -36,6 +42,8 @@ def model_predict(img_path,model):
     image = img_to_array(image)
     image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
     image = preprocess_input(image)
+    graph = tf.get_default_graph()
+    set_session(session)
     preds = model.predict(image)
     label = decode_predictions(preds)
     # retrieve the most likely result, e.g. highest probability
