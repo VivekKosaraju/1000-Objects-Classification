@@ -20,16 +20,10 @@ import os
 import io
 from PIL import Image, ImageOps
 
-@st.cache(suppress_st_warning=True,allow_output_mutation=True)
-def models():
-    model=load_model('model')
-    model._make_predict_function()
-    model.summary()
-    return model
-    
-model = models()
+model=load_model('model')
+model._make_predict_function()
 
-def model_predict(img_path, model):
+def model_predict(img_path):
     # Preprocessing the image
     image = Image.open(img_path).convert('RGB')
     size = (299,299)
@@ -37,7 +31,7 @@ def model_predict(img_path, model):
     image = img_to_array(image)
     image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
     image = preprocess_input(image)
-    preds=model.predict(image)
+    preds = model.predict(image)
     label = decode_predictions(preds)
     # retrieve the most likely result, e.g. highest probability
     label = label[0][0]
@@ -66,7 +60,7 @@ def main():
         if image_file is None:
             raise Exception("image not uploaded, please refresh page and upload the image")
         with st.spinner("Predicting......"):
-            label=model_predict(image_file,model)
+            label=model_predict(image_file)
             st.write('%s (%.2f%%)' % (label[1], label[2]*100))
          
     hide_streamlit_style ="""
