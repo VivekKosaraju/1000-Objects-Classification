@@ -59,14 +59,14 @@ def main():
     st.markdown(html2,unsafe_allow_html=True)
     image_file = st.file_uploader("Upload Image",type=['jpg','png','jpeg'])
     if image_file:
-        st.image(image_file,caption="uploaded image",width=10,use_column_width=True)  
+        st.image(image_file,caption="uploaded image",width=10,use_column_width=True)
+        model = models()
+        graph = tf.get_default_graph()
     
     if st.button("Predict"):
         if image_file is None:
             raise Exception("image not uploaded, please refresh page and upload the image")
         with st.spinner("Predicting......"):
-            model = models()
-            graph = tf.get_default_graph()
             label=model_predict(image_file,model)
             st.write('%s (%.2f%%)' % (label[1], label[2]*100))
          
