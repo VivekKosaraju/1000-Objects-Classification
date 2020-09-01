@@ -9,8 +9,8 @@ import numpy as np
 import streamlit as st
 
 # Keras
-from tensorflow.keras.applications.xception import preprocess_input
-from tensorflow.keras.applications.xception import decode_predictions
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+from tensorflow.keras.applications.mobilenet_v2 import decode_predictions
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.preprocessing.image import img_to_array
@@ -67,7 +67,7 @@ def main():
         with st.spinner("Predicting......"):
             model = models()
             result=model_predict(image_file,model)
-            st.success('The output is {}'.format(result))
+            st.write('%s (%.2f%%)' % (label[1], label[2]*100))
          
     hide_streamlit_style ="""
         <style>
