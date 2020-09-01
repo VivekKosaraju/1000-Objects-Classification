@@ -23,10 +23,12 @@ from PIL import Image, ImageOps
 @st.cache(suppress_st_warning=True,allow_output_mutation=True)
 def models():
     model=load_model('model')
+    model._make_predict_function()
     model.summary()
     return model
     
- 
+model = models()
+
 def model_predict(img_path, model):
     # Preprocessing the image
     image = Image.open(img_path).convert('RGB')
@@ -35,7 +37,6 @@ def model_predict(img_path, model):
     image = img_to_array(image)
     image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
     image = preprocess_input(image)
-    graph = tf.get_default_graph()
     preds=model.predict(image)
     label = decode_predictions(preds)
     # retrieve the most likely result, e.g. highest probability
@@ -60,8 +61,6 @@ def main():
     image_file = st.file_uploader("Upload Image",type=['jpg','png','jpeg'])
     if image_file:
         st.image(image_file,caption="uploaded image",width=10,use_column_width=True)
-        model = models()
-        graph = tf.get_default_graph()
     
     if st.button("Predict"):
         if image_file is None:
