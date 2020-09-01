@@ -20,7 +20,7 @@ import os
 import io
 from PIL import Image, ImageOps
 
-
+@st.cache(suppress_st_warning=True,allow_output_mutation=True)
 def models():
     model=load_model('model')
     model.summary()
@@ -35,14 +35,18 @@ def model_predict(img_path, model):
     image = img_to_array(image)
     image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
     image = preprocess_input(image)
-    preds=model.predict(image)
-    label = decode_predictions(preds)
-    # retrieve the most likely result, e.g. highest probability
-    label = label[0][0]
-    return label
+    global graph
+    with graph.as_default():
+        preds=model.predict(image)
+        label = decode_predictions(preds)
+        # retrieve the most likely result, e.g. highest probability
+        label = label[0][0]
+        return label
 
 
- 
+model = models()
+graph = tf.get_default_graph()
+
 def main():
     st.set_option('deprecation.showfileUploaderEncoding',False)
     st.title("Image Classification")
@@ -58,7 +62,8 @@ def main():
     st.markdown(html2,unsafe_allow_html=True)
     image_file = st.file_uploader("Upload Image",type=['jpg','png','jpeg'])
     if image_file:
-        st.image(image_file,caption="uploaded image",width=10,use_column_width=True)
+        st.image(image_file,caption="uploaded image",width=10,use_column_width=True)  
+    
     if st.button("Predict"):
         if image_file is None:
             raise Exception("image not uploaded, please refresh page and upload the image")
