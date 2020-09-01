@@ -7,7 +7,7 @@ Created on Tue Sep  1 11:11:07 2020
 
 import numpy as np
 import streamlit as st
-
+import tensorflow as tf
 # Keras
 from tensorflow.keras.applications.xception import preprocess_input
 from tensorflow.keras.applications.xception import decode_predictions
@@ -44,8 +44,6 @@ def model_predict(img_path, model):
         return label
 
 
-model = models()
-graph = tf.get_default_graph()
 
 def main():
     st.set_option('deprecation.showfileUploaderEncoding',False)
@@ -68,6 +66,8 @@ def main():
         if image_file is None:
             raise Exception("image not uploaded, please refresh page and upload the image")
         with st.spinner("Predicting......"):
+            model = models()
+            graph = tf.get_default_graph()
             model = models()
             label=model_predict(image_file,model)
             st.write('%s (%.2f%%)' % (label[1], label[2]*100))
