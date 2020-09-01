@@ -21,7 +21,7 @@ import os
 import io
 from PIL import Image, ImageOps
 
-#@st.cache(suppress_st_warning=True)
+@st.cache(suppress_st_warning=True,allow_output_mutation=True)
 def models():
     model=load_model('model')
     model.summary()
@@ -66,7 +66,7 @@ def main():
             raise Exception("image not uploaded, please refresh page and upload the image")
         with st.spinner("Predicting......"):
             model = models()
-            result=model_predict(image_file,model)
+            label=model_predict(image_file,model)
             st.write('%s (%.2f%%)' % (label[1], label[2]*100))
          
     hide_streamlit_style ="""
